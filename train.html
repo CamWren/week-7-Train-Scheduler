@@ -10,11 +10,18 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-    <!-- Added Moment JS -->
+    <script src="https://www.gstatic.com/firebasejs/3.6.3/firebase.js"></script>
+
+     <!-- Added Moment JS -->
     <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
 
     <!--jQuery-->
     <script src="https://code.jquery.com/jquery.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+    <script type="text/javascript" src="assets/javascript/app.js"></script>
+
 
   </head>
 
@@ -78,123 +85,12 @@
               </form>
            </div>
         </div>
-         
 
-    <script src="https://www.gstatic.com/firebasejs/3.6.3/firebase.js"></script>
-      <script>
-        // Initialize Firebase
-        var config = {
-          apiKey: "AIzaSyBT34CJl-I4Qt-mZ1MIrYfgTiw90NScs98",
-          authDomain: "train-scheduler-2fc77.firebaseapp.com",
-          databaseURL: "https://train-scheduler-2fc77.firebaseio.com",
-          storageBucket: "train-scheduler-2fc77.appspot.com",
-          messagingSenderId: "1006999901461"
-        };
-        firebase.initializeApp(config);
-
-        // Create a variable to reference the database
-        var database = firebase.database();
-
-
-        var trainName = "";
-        var destination = "";
-        var trainTime = "";
-        var frequency = 0;
-
-
-        //Click event for Submit button
-        $("#add-train").on("click", function() {
-            trainName = $("#trainName-input").val().trim();
-            destination = $("#destination-input").val().trim();
-            trainTime = $("#trainTime-input").val().trim();
-            frequency = $("#frequency-input").val().trim();
-
-            database.ref().push({
-              trainName: trainName,
-              destination: destination,
-              trainTime: trainTime,
-              frequency: frequency
-            });
-
-            console.log(trainName);
-            console.log(destination);
-            console.log(trainTime);
-            console.log(frequency);
-
-        
-            // Assume the following situations.
-
-            // (TEST 1)
-            // First Train of the Day is 3:00 AM
-            // Assume Train comes every 3 minutes.
-            // Assume the current time is 3:16 AM....
-            // What time would the next train be...? (Use your brain first)
-            // It would be 3:18 -- 2 minutes away
-
-            // (TEST 2)
-            // First Train of the Day is 3:00 AM
-            // Assume Train comes every 7 minutes.
-            // Assume the current time is 3:16 AM....
-            // What time would the next train be...? (Use your brain first)
-            // It would be 3:21 -- 5 minutes away
-
-
-            // ==========================================================
-
-            // Solved Mathematically
-            // Test case 1:
-            // 16 - 00 = 16
-            // 16 % 3 = 1 (Modulus is the remainder)
-            // 3 - 1 = 2 minutes away
-            // 2 + 3:16 = 3:18
-
-            // Solved Mathematically
-            // Test case 2:
-            // 16 - 00 = 16
-            // 16 % 7 = 2 (Modulus is the remainder)
-            // 7 - 2 = 5 minutes away
-            // 5 + 3:16 = 3:21
-
-            // Assumptions
-            var tFrequency = $("#frequency-input");
-
-            // Time is 3:30 AM
-            var firstTime = $("#trainTime-input");
-
-            // First Time (pushed back 1 year to make sure it comes before current time)
-            var firstTimeConverted = moment(firstTime, "hh:mm");
-            console.log(firstTimeConverted);
-
-            // Current Time
-            var currentTime = moment();
-            console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
-
-            // Difference between the times
-            var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-            console.log("DIFFERENCE IN TIME: " + diffTime);
-
-            // Time apart (remainder)
-            var tRemainder = diffTime % tFrequency;
-            console.log(tRemainder);
-
-            // Minute Until Train
-            var tMinutesTillTrain = tFrequency - tRemainder;
-            console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
-
-            // Next Train
-            var nextTrain = moment().add(tMinutesTillTrain, "minutes");
-            console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
-
-            database.ref().once("child_added", function(childSnapshot) {
-              $(".trainInfo").append("<tr>" + "<td>" + childSnapshot.val().trainName + "</td>" + "<td>" + childSnapshot.val().destination + "</td>" + "<td>" + childSnapshot.val().frequency + "</td>" + "<td>" + nextTrain + "<td>" + tMinutesTillTrain + "</tr>");
-            });
-
-            $("form").trigger("reset");
-
-          return false;
-        });
-
-    </script>
+        <footer>
+            <div class="container">
+                &copy; Copyright 2016 Cameron Wren
+            </div>
+        </footer>
 
   </body>
 
